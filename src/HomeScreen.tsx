@@ -1,10 +1,6 @@
 import React from 'react';
 import {View, FlatList} from 'react-native';
 import ListItem from './ListItem';
-import {createStackNavigator} from '@react-navigation/stack';
-import PokemonScreen from './PokemonScreen';
-
-const Stack = createStackNavigator();
 class HomeScreen extends React.Component {
   state = {pokemons: [], offset: 0};
   constructor(props: Object) {
@@ -26,9 +22,6 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View>
-        <Stack.Navigator>
-          <Stack.Screen name="Pokemon" component={PokemonScreen} />
-        </Stack.Navigator>
         <FlatList
           data={this.state.pokemons}
           renderItem={({item}) => (
