@@ -1,15 +1,22 @@
 import React from 'react';
-import {View, FlatList} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import PokemonScreen from './PokemonScreen';
 import HomeScreen from './HomeScreen';
+import {HomeScreenProps} from './HomeScreen';
+export type BasicPokemonInfo = {
+  name: string;
+  url: string;
+  imgUri: string;
+  data: object;
+};
 
-const Stack = createStackNavigator();
+export type HomeStackParamList = {
+  Home: HomeScreenProps;
+  Pokemon: BasicPokemonInfo;
+};
+
+const Stack = createStackNavigator<HomeStackParamList>();
 class HomeStackNavigator extends React.Component {
-  constructor(props: Object) {
-    super(props);
-  }
-
   render() {
     return (
       <Stack.Navigator initialRouteName="Home">

@@ -6,8 +6,18 @@ import {
   Dimensions,
   TouchableHighlight,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {BasicPokemonInfo} from './HomeStackNavigator';
 
-class ListItem extends React.Component {
+type Props = {
+  item: BasicPokemonInfo;
+  onPress(item: BasicPokemonInfo): void;
+};
+
+class ListItem extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+  }
   state = {pokemons: [], offset: 0};
 
   render() {
@@ -15,7 +25,11 @@ class ListItem extends React.Component {
       <View>
         <TouchableHighlight onPress={() => this.props.onPress(this.props.item)}>
           <View style={styles.listItem}>
-            <Text>{this.props.item.name}</Text>
+            <FastImage
+              style={styles.image}
+              source={{uri: this.props.item.imgUri}}
+            />
+            <Text style={styles.text}>{this.props.item.name}</Text>
           </View>
         </TouchableHighlight>
       </View>
@@ -25,6 +39,7 @@ class ListItem extends React.Component {
 const styles = StyleSheet.create({
   listItem: {
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -32,6 +47,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: Dimensions.get('window').width,
     height: 100,
+  },
+  image: {
+    width: 100,
+    height: 100,
+  },
+  text: {
+    fontFamily: 'Kefa Regular',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 export default ListItem;
