@@ -3,7 +3,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {storage} from '../App';
-import {BasicPokemonInfo} from './HomeStackNavigator';
+import {BasicPokemonInfo} from './CustomTypes';
 
 type Props = {
   route: RouteProp<{params: {item: BasicPokemonInfo}}>;
@@ -13,8 +13,43 @@ class PokemonScreen extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
+
+  renderTypes() {
+    const {types} = this.props.route.params.item.data;
+    return (
+      <View style={styles.types}>
+        <Text style={styles.typeText}>Types:</Text>
+        {types.map(type => {
+          return (
+            <Text key={type.slot} style={styles.typeText}>
+              {type.type.name}
+            </Text>
+          );
+        })}
+      </View>
+    );
+  }
+  renderStats() {
+    const {stats} = this.props.route.params.item.data;
+    return (
+      <View>
+        {stats.map(stat => {
+          return (
+            <Text key={stat.stat.name} style={styles.typeText}>
+              {stat.stat.name} : {stat.base_stat}
+            </Text>
+          );
+        })}
+      </View>
+    );
+  }
+  favouritePokemon(item: BasicPokemonInfo) {
+    storage.set('favourite_pokemon', JSON.stringify(item));
+  }
+
   render() {
-    const {data, imgUri, name} = this.props.route.params.item;
+    const {item} = this.props.route.params;
+    const {imgUri, name} = item;
     return (
       <View style={styles.container}>
         <FastImage
@@ -24,41 +59,15 @@ class PokemonScreen extends React.Component<Props> {
           }}
         />
         <Text style={styles.text}>{name}</Text>
-        <View>
-          <View style={styles.types}>
-            <Text style={styles.typeText}>Types:</Text>
-            {data.types.map(type => {
-              return (
-                <Text key={type.slot} style={styles.typeText}>
-                  {type.type.name}
-                </Text>
-              );
-            })}
-          </View>
-
-          {data.stats.map(stat => {
-            return (
-              <Text key={stat.stat.name} style={styles.typeText}>
-                {stat.stat.name} : {stat.base_stat}
-              </Text>
-            );
-          })}
-        </View>
-        <Button
-          title="Favourite"
-          onPress={() => {
-            storage.set(
-              'favourite_pokemon',
-              JSON.stringify(this.props.route.params.item),
-            );
-          }}
-        />
+        {this.renderTypes()}
+        {this.renderStats()}
+        <Button title="Favourite" onPress={() => this.favouritePokemon(item)} />
       </View>
     );
   }
 }
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',

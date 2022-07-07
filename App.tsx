@@ -14,7 +14,11 @@ const App = () => {
     <NavigationContainer>
       <Tab.Navigator initialRouteName="Home">
         <Tab.Screen name="HomeStack" component={HomeStackNavigator} />
-        <Tab.Screen name="Favourite" component={FavouriteScreen} />
+        <Tab.Screen
+          name="Favourite"
+          component={FavouriteScreen}
+          options={{unmountOnBlur: true}}
+        />
         <Tab.Screen name="Map" component={MapScreen} />
       </Tab.Navigator>
     </NavigationContainer>

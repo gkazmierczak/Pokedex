@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {BasicPokemonInfo} from './HomeStackNavigator';
+import {BasicPokemonInfo} from './CustomTypes';
 
 type Props = {
   item: BasicPokemonInfo;
@@ -18,18 +18,15 @@ class ListItem extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
-  state = {pokemons: [], offset: 0};
 
   render() {
+    const {item, onPress} = this.props;
     return (
       <View>
-        <TouchableHighlight onPress={() => this.props.onPress(this.props.item)}>
+        <TouchableHighlight onPress={() => onPress(item)}>
           <View style={styles.listItem}>
-            <FastImage
-              style={styles.image}
-              source={{uri: this.props.item.imgUri}}
-            />
-            <Text style={styles.text}>{this.props.item.name}</Text>
+            <FastImage style={styles.image} source={{uri: item.imgUri}} />
+            <Text style={styles.text}>{item.name}</Text>
           </View>
         </TouchableHighlight>
       </View>

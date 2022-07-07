@@ -1,16 +1,12 @@
 import React from 'react';
 import {View, FlatList} from 'react-native';
 import ListItem from './ListItem';
-import {BasicPokemonInfo} from './HomeStackNavigator';
-import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
+import {
+  BasicPokemonInfo,
+  HomeScreenProps,
+  HomeScreenState,
+} from './CustomTypes';
 
-export type HomeScreenProps = {
-  navigation: StackNavigationHelpers;
-};
-type HomeScreenState = {
-  pokemons: BasicPokemonInfo[];
-  offset: number;
-};
 class HomeScreen extends React.Component<HomeScreenProps, HomeScreenState> {
   state: Readonly<HomeScreenState> = {pokemons: [], offset: 0};
   constructor(props: HomeScreenProps) {
@@ -23,14 +19,14 @@ class HomeScreen extends React.Component<HomeScreenProps, HomeScreenState> {
   getMorePokemons = async () => {
     const response = await fetch(this.query + this.state.offset.toString());
     const data = await response.json();
-    let pokemons = [...this.state.pokemons, ...data.results];
-    this.setState({pokemons: pokemons, offset: pokemons.length});
+    const pokemons = [...this.state.pokemons, ...data.results];
+    this.setState({pokemons, offset: pokemons.length});
     this.state.pokemons.map(this.getPokemonData);
   };
   getPokemonData = async (pokemon: BasicPokemonInfo) => {
     const response = await fetch(pokemon.url);
     const data = await response.json();
-    let pokemons = [...this.state.pokemons];
+    const pokemons = [...this.state.pokemons];
     pokemons[pokemons.indexOf(pokemon)] = {
       name: pokemon.name,
       url: pokemon.url,
