@@ -8,7 +8,10 @@ import {
 } from './CustomTypes';
 
 class HomeScreen extends React.Component<HomeScreenProps, HomeScreenState> {
-  state: Readonly<HomeScreenState> = {pokemons: [], offset: 0};
+  state: Readonly<HomeScreenState> = {
+    pokemons: [],
+    offset: 0,
+  };
   constructor(props: HomeScreenProps) {
     super(props);
     this.getMorePokemons();

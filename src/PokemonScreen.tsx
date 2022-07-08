@@ -2,8 +2,8 @@ import {RouteProp} from '@react-navigation/native';
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {storage} from '../App';
 import {BasicPokemonInfo} from './CustomTypes';
+import {FavouritePokemonContext} from './FavouritePokemonContext';
 
 type Props = {
   route: RouteProp<{params: {item: BasicPokemonInfo}}>;
@@ -43,8 +43,10 @@ class PokemonScreen extends React.Component<Props> {
       </View>
     );
   }
-  favouritePokemon(item: BasicPokemonInfo) {
-    storage.set('favourite_pokemon', JSON.stringify(item));
+
+  isPokemonFavourite(pokemons: BasicPokemonInfo[], pokemon: BasicPokemonInfo) {
+    console.log(pokemons);
+    return pokemons.some(el => el.name === pokemon.name);
   }
 
   render() {
@@ -61,7 +63,17 @@ class PokemonScreen extends React.Component<Props> {
         <Text style={styles.text}>{name}</Text>
         {this.renderTypes()}
         {this.renderStats()}
-        <Button title="Favourite" onPress={() => this.favouritePokemon(item)} />
+        <FavouritePokemonContext.Consumer>
+          {({pokemons, togglePokemonFavourite}) => {
+            const isFavourite = this.isPokemonFavourite(pokemons, item);
+            return (
+              <Button
+                title={isFavourite ? 'Unfavourite' : 'Favourite'}
+                onPress={() => togglePokemonFavourite(isFavourite, item)}
+              />
+            );
+          }}
+        </FavouritePokemonContext.Consumer>
       </View>
     );
   }

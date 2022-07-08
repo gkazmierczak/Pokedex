@@ -3,7 +3,6 @@ import {Button, Text, View, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {storage} from '../App';
 import {BasicPokemonInfo} from './CustomTypes';
-
 type FavouriteScreenState = {
   pokemonData: BasicPokemonInfo;
 };

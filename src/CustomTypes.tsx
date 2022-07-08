@@ -32,6 +32,7 @@ export type HomeStackParamList = {
 export type HomeScreenProps = {
   navigation: StackNavigationHelpers;
 };
+
 export type HomeScreenState = {
   pokemons: BasicPokemonInfo[];
   offset: number;
