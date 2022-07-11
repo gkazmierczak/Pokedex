@@ -1,8 +1,10 @@
 import React from 'react';
-import {Button, Text, View, StyleSheet} from 'react-native';
+import {Button, Text, View, StyleSheet, FlatList} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {storage} from '../App';
 import {BasicPokemonInfo} from './CustomTypes';
+import {FavouritePokemonContext} from './FavouritePokemonContext';
+import PokemonIcon from './PokemonIcon';
 type FavouriteScreenState = {
   pokemonData: BasicPokemonInfo;
 };
@@ -39,8 +41,8 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       }
     }
   };
-  renderTypes() {
-    const {data} = this.state.pokemonData;
+  renderTypes(pokemon) {
+    const {data} = pokemon;
     return (
       <View style={styles.types}>
         <Text style={styles.typeText}>Types:</Text>
@@ -54,8 +56,8 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       </View>
     );
   }
-  renderStats() {
-    const {data} = this.state.pokemonData;
+  renderStats(pokemon) {
+    const {data} = pokemon;
     return (
       <View>
         {data.stats.map(stat => {
@@ -68,25 +70,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       </View>
     );
   }
-
-  render() {
-    const {imgUri, name} = this.state.pokemonData;
-    if (name !== 'none') {
-      return (
-        <View style={styles.container}>
-          <FastImage
-            style={styles.image}
-            source={{
-              uri: imgUri,
-            }}
-          />
-          <Text style={styles.text}>{name}</Text>
-          {this.renderTypes()}
-          {this.renderStats()}
-          <Button title="unfavourite" onPress={this.unfavouritePokemon} />
-        </View>
-      );
-    }
+  renderNoFavourite() {
     return (
       <View style={styles.container}>
         <FastImage
@@ -100,11 +84,62 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       </View>
     );
   }
+  renderFavouriteList(pokemons, onPress) {
+    return (
+      <FlatList
+        extraData={pokemons}
+        data={pokemons}
+        renderItem={({item}: {item: BasicPokemonInfo}) => (
+          <PokemonIcon item={item} onPress={item => onPress(item)} />
+        )}
+        horizontal={true}
+        keyExtractor={item => item.name.toString()}
+      />
+    );
+  }
+  renderSelectedPokemon(pokemon) {
+    console.log(pokemon);
+    if (pokemon !== undefined) {
+      const {name, imgUri} = pokemon;
+      return (
+        <View style={styles.container}>
+          <FastImage
+            style={styles.image}
+            source={{
+              uri: imgUri,
+            }}
+          />
+          <Text style={styles.text}>{name}</Text>
+          {this.renderTypes(pokemon)}
+          {this.renderStats(pokemon)}
+          <Button title="unfavourite" onPress={this.unfavouritePokemon} />
+        </View>
+      );
+    }
+  }
+
+  render() {
+    return (
+      <FavouritePokemonContext.Consumer>
+        {({pokemons, selectedPokemon, setSelectedPokemon}) => {
+          if (pokemons !== []) {
+            return (
+              <View>
+                {this.renderFavouriteList(pokemons, setSelectedPokemon)}
+                {this.renderSelectedPokemon(selectedPokemon)}
+              </View>
+            );
+          }
+          return this.renderNoFavourite();
+        }}
+      </FavouritePokemonContext.Consumer>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
   },
