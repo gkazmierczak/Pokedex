@@ -1,12 +1,25 @@
 import React from 'react';
 import {storage} from '../App';
-import {BasicPokemonInfo} from './CustomTypes';
+import {BasicPokemonInfo, FavouritePokemonContextType} from './CustomTypes';
 import {FavouritePokemonContext} from './FavouritePokemonContext';
 
-class FavouritePokemonContextProvider extends React.Component {
-  state = {
-    favouritePokemons: [],
-    selectedPokemon: undefined,
+type Props = {
+  children: React.ReactNode;
+};
+class FavouritePokemonContextProvider extends React.Component<
+  Props,
+  FavouritePokemonContextType
+> {
+  state: Readonly<FavouritePokemonContextType> = {
+    pokemons: [],
+    selectedPokemon: {
+      data: {types: [], stats: []},
+      imgUri: '',
+      name: '',
+      url: '',
+    },
+    togglePokemonFavourite: this.togglePokemonFavourite,
+    setSelectedPokemon: this.setSelectedPokemon,
   };
   componentDidMount() {
     this.getFavouritePokemons();
@@ -16,7 +29,7 @@ class FavouritePokemonContextProvider extends React.Component {
       const jsonPokemon = storage.getString('favourite_pokemons');
       if (jsonPokemon !== undefined) {
         const pokemonObject = JSON.parse(jsonPokemon);
-        this.setState({favouritePokemons: pokemonObject});
+        this.setState({pokemons: pokemonObject});
       }
     }
     if (storage.contains('selected_pokemon')) {
@@ -28,29 +41,36 @@ class FavouritePokemonContextProvider extends React.Component {
     }
   };
   togglePokemonFavourite(isFavourite: boolean, item: BasicPokemonInfo) {
+    const {selectedPokemon} = this.state;
     let newPokemons = [];
     if (isFavourite) {
-      newPokemons = this.state.favouritePokemons.filter(
-        val => val.name !== item.name,
-      );
+      newPokemons = this.state.pokemons.filter(val => val.name !== item.name);
+      if (selectedPokemon !== undefined && selectedPokemon.name === item.name) {
+        this.setState({
+          selectedPokemon: {
+            data: {types: [], stats: []},
+            imgUri: '',
+            name: '',
+            url: '',
+          },
+        });
+      }
     } else {
-      newPokemons = [...this.state.favouritePokemons, item];
+      newPokemons = [...this.state.pokemons, item];
     }
-    this.setState({favouritePokemons: newPokemons});
+    this.setState({pokemons: newPokemons});
     storage.set('favourite_pokemons', JSON.stringify(newPokemons));
   }
   setSelectedPokemon(selectedPokemon: BasicPokemonInfo) {
     this.setState({
       selectedPokemon: selectedPokemon,
     });
-    console.log(this.state.selectedPokemon);
-    // console.log(selectedPokemon);
   }
   render() {
     return (
       <FavouritePokemonContext.Provider
         value={{
-          pokemons: this.state.favouritePokemons,
+          pokemons: this.state.pokemons,
           togglePokemonFavourite: this.togglePokemonFavourite.bind(this),
           setSelectedPokemon: this.setSelectedPokemon.bind(this),
           selectedPokemon: this.state.selectedPokemon,

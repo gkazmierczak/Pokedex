@@ -38,6 +38,16 @@ export type HomeScreenState = {
   offset: number;
 };
 
+export type FavouritePokemonContextType = {
+  pokemons: BasicPokemonInfo[];
+  togglePokemonFavourite: (
+    _isFavourite: boolean,
+    _item: BasicPokemonInfo,
+  ) => void;
+  selectedPokemon: BasicPokemonInfo;
+  setSelectedPokemon: (_pokemon: BasicPokemonInfo) => void;
+};
+
 export type MapScreenState = {
   markers: MarkerData[];
   modalVisible: boolean;

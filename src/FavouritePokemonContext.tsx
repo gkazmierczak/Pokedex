@@ -1,9 +1,18 @@
 import React from 'react';
-import {BasicPokemonInfo} from './CustomTypes';
+import {BasicPokemonInfo, FavouritePokemonContextType} from './CustomTypes';
 
-export const FavouritePokemonContext = React.createContext({
-  pokemons: [],
-  togglePokemonFavourite: (isFavourite: boolean, item: BasicPokemonInfo) => {},
-  selectedPokemon: undefined,
-  setSelectedPokemon: (pokemon: BasicPokemonInfo) => {},
-});
+export const FavouritePokemonContext =
+  React.createContext<FavouritePokemonContextType>({
+    pokemons: [],
+    togglePokemonFavourite: (
+      _isFavourite: boolean,
+      _item: BasicPokemonInfo,
+    ) => {},
+    selectedPokemon: {
+      data: {types: [], stats: []},
+      imgUri: '',
+      name: 'none',
+      url: '',
+    },
+    setSelectedPokemon: (_pokemon: BasicPokemonInfo) => {},
+  });

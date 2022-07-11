@@ -45,7 +45,6 @@ class PokemonScreen extends React.Component<Props> {
   }
 
   isPokemonFavourite(pokemons: BasicPokemonInfo[], pokemon: BasicPokemonInfo) {
-    console.log(pokemons);
     return pokemons.some(el => el.name === pokemon.name);
   }
 

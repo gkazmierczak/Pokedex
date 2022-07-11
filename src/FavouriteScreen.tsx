@@ -41,7 +41,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       }
     }
   };
-  renderTypes(pokemon) {
+  renderTypes(pokemon: BasicPokemonInfo) {
     const {data} = pokemon;
     return (
       <View style={styles.types}>
@@ -56,7 +56,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       </View>
     );
   }
-  renderStats(pokemon) {
+  renderStats(pokemon: BasicPokemonInfo) {
     const {data} = pokemon;
     return (
       <View>
@@ -84,22 +84,27 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       </View>
     );
   }
-  renderFavouriteList(pokemons, onPress) {
+  renderFavouriteList(
+    pokemons: BasicPokemonInfo[],
+    onPress: (a: BasicPokemonInfo) => void,
+  ) {
     return (
       <FlatList
         extraData={pokemons}
         data={pokemons}
         renderItem={({item}: {item: BasicPokemonInfo}) => (
-          <PokemonIcon item={item} onPress={item => onPress(item)} />
+          <PokemonIcon item={item} onPress={() => onPress(item)} />
         )}
         horizontal={true}
         keyExtractor={item => item.name.toString()}
       />
     );
   }
-  renderSelectedPokemon(pokemon) {
-    console.log(pokemon);
-    if (pokemon !== undefined) {
+  renderSelectedPokemon(
+    pokemon: BasicPokemonInfo,
+    onPress: (a: boolean, b: BasicPokemonInfo) => void,
+  ) {
+    if (pokemon.name !== '') {
       const {name, imgUri} = pokemon;
       return (
         <View style={styles.container}>
@@ -112,7 +117,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
           <Text style={styles.text}>{name}</Text>
           {this.renderTypes(pokemon)}
           {this.renderStats(pokemon)}
-          <Button title="unfavourite" onPress={this.unfavouritePokemon} />
+          <Button title="Unfavourite" onPress={() => onPress(true, pokemon)} />
         </View>
       );
     }
@@ -121,12 +126,20 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
   render() {
     return (
       <FavouritePokemonContext.Consumer>
-        {({pokemons, selectedPokemon, setSelectedPokemon}) => {
-          if (pokemons !== []) {
+        {({
+          pokemons,
+          selectedPokemon,
+          setSelectedPokemon,
+          togglePokemonFavourite,
+        }) => {
+          if (pokemons.length > 0) {
             return (
               <View>
                 {this.renderFavouriteList(pokemons, setSelectedPokemon)}
-                {this.renderSelectedPokemon(selectedPokemon)}
+                {this.renderSelectedPokemon(
+                  selectedPokemon,
+                  togglePokemonFavourite,
+                )}
               </View>
             );
           }
@@ -139,7 +152,6 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
   },
