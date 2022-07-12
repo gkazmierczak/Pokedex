@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, View, TouchableHighlight} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {BasicPokemonInfo} from './CustomTypes';
+import {GraphQLPokemonInfo} from './CustomTypes';
 
 type Props = {
-  item: BasicPokemonInfo;
-  onPress(item: BasicPokemonInfo): void;
+  item: GraphQLPokemonInfo;
+  onPress(item: GraphQLPokemonInfo): void;
 };
 
 class PokemonIcon extends React.Component<Props> {
@@ -22,7 +22,12 @@ class PokemonIcon extends React.Component<Props> {
           underlayColor={'#e76f51'}
           onPress={() => onPress(item)}>
           <View style={styles.icon}>
-            <FastImage style={styles.image} source={{uri: item.imgUri}} />
+            <FastImage
+              style={styles.image}
+              source={{
+                uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png`,
+              }}
+            />
           </View>
         </TouchableHighlight>
       </View>

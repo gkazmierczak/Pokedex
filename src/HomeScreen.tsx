@@ -2,67 +2,77 @@ import React from 'react';
 import {View, FlatList} from 'react-native';
 import ListItem from './ListItem';
 import {
-  BasicPokemonInfo,
-  HomeScreenProps,
+  GraphQLHomeScreenProps,
+  GraphQLPokemonInfo,
   HomeScreenState,
 } from './CustomTypes';
-
-class HomeScreen extends React.Component<HomeScreenProps, HomeScreenState> {
+import {withQuery} from './withQuery';
+class HomeScreen extends React.Component<
+  GraphQLHomeScreenProps,
+  HomeScreenState
+> {
   state: Readonly<HomeScreenState> = {
     pokemons: [],
     offset: 0,
   };
 
-  constructor(props: HomeScreenProps) {
+  constructor(props: GraphQLHomeScreenProps) {
     super(props);
-    this.getMorePokemons();
   }
 
   query = 'https://pokeapi.co/api/v2/pokemon?limit=10&offset=';
 
-  getMorePokemons = async () => {
-    const response = await fetch(this.query + this.state.offset.toString());
-    const data = await response.json();
-    const pokemons = [...this.state.pokemons, ...data.results];
-    this.setState({pokemons, offset: pokemons.length});
-    this.state.pokemons.map(this.getPokemonData);
-  };
-
-  getPokemonData = async (pokemon: BasicPokemonInfo) => {
-    const response = await fetch(pokemon.url);
-    const data = await response.json();
-    const pokemons = [...this.state.pokemons];
-    pokemons[pokemons.indexOf(pokemon)] = {
-      name: pokemon.name,
-      url: pokemon.url,
-      imgUri: data.sprites.front_default,
-      data: data,
-    };
-    this.setState({pokemons: pokemons});
-  };
-
-  handlePokemonPress = (item: BasicPokemonInfo) => {
+  handlePokemonPress = (item: GraphQLPokemonInfo) => {
     this.props.navigation.push('Pokemon', {item});
   };
-
+  onEndReached() {
+    const {data} = this.props;
+    const pokemons = data.data.pokemon_v2_pokemon;
+    data.fetchMore({
+      variables: {
+        offset: pokemons.length,
+      },
+      updateQuery: (
+        prevResult: GraphQLPokemonInfo[],
+        {
+          fetchMoreResult,
+        }: {fetchMoreResult?: {pokemon_v2_pokemon: GraphQLPokemonInfo[]}},
+      ) => {
+        if (
+          !fetchMoreResult ||
+          fetchMoreResult.pokemon_v2_pokemon.length === 0
+        ) {
+          return prevResult;
+        }
+        return {
+          pokemon_v2_pokemon: pokemons.concat(
+            fetchMoreResult.pokemon_v2_pokemon,
+          ),
+        };
+      },
+    });
+  }
   render() {
+    const {data} = this.props;
     return (
       <View>
-        <FlatList
-          extraData={this.state}
-          data={this.state.pokemons}
-          renderItem={({item}: {item: BasicPokemonInfo}) => (
-            <ListItem item={item} onPress={this.handlePokemonPress} />
-          )}
-          keyExtractor={item => item.name.toString()}
-          onEndReachedThreshold={0.5}
-          onEndReached={() => {
-            this.getMorePokemons();
-          }}
-        />
+        {data.data !== undefined && (
+          <FlatList
+            extraData={this.props}
+            data={data.data.pokemon_v2_pokemon}
+            renderItem={({item}: {item: GraphQLPokemonInfo}) => (
+              <ListItem item={item} onPress={this.handlePokemonPress} />
+            )}
+            keyExtractor={item => item.name.toString()}
+            onEndReachedThreshold={0.5}
+            onEndReached={() => {
+              this.onEndReached();
+            }}
+          />
+        )}
       </View>
     );
   }
 }
 
-export default HomeScreen;
+export default withQuery(HomeScreen);

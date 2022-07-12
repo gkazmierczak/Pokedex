@@ -2,11 +2,11 @@ import {RouteProp} from '@react-navigation/native';
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {BasicPokemonInfo} from './CustomTypes';
+import {GraphQLPokemonInfo} from './CustomTypes';
 import {FavouritePokemonContext} from './FavouritePokemonContext';
 
 type Props = {
-  route: RouteProp<{params: {item: BasicPokemonInfo}}>;
+  route: RouteProp<{params: {item: GraphQLPokemonInfo}}>;
 };
 
 class PokemonScreen extends React.Component<Props> {
@@ -15,14 +15,14 @@ class PokemonScreen extends React.Component<Props> {
   }
 
   renderTypes() {
-    const {types} = this.props.route.params.item.data;
+    const types = this.props.route.params.item.pokemon_v2_pokemontypes;
     return (
       <View style={styles.types}>
         <Text style={styles.typeText}>Types:</Text>
         {types.map(type => {
           return (
-            <Text key={type.slot} style={styles.typeText}>
-              {type.type.name}
+            <Text key={type.pokemon_v2_type.name} style={styles.typeText}>
+              {type.pokemon_v2_type.name}
             </Text>
           );
         })}
@@ -30,13 +30,13 @@ class PokemonScreen extends React.Component<Props> {
     );
   }
   renderStats() {
-    const {stats} = this.props.route.params.item.data;
+    const stats = this.props.route.params.item.pokemon_v2_pokemonstats;
     return (
       <View>
         {stats.map(stat => {
           return (
-            <Text key={stat.stat.name} style={styles.typeText}>
-              {stat.stat.name} : {stat.base_stat}
+            <Text key={stat.pokemon_v2_stat.name} style={styles.typeText}>
+              {stat.pokemon_v2_stat.name} : {stat.base_stat}
             </Text>
           );
         })}
@@ -44,19 +44,22 @@ class PokemonScreen extends React.Component<Props> {
     );
   }
 
-  isPokemonFavourite(pokemons: BasicPokemonInfo[], pokemon: BasicPokemonInfo) {
+  isPokemonFavourite(
+    pokemons: GraphQLPokemonInfo[],
+    pokemon: GraphQLPokemonInfo,
+  ) {
     return pokemons.some(el => el.name === pokemon.name);
   }
 
   render() {
     const {item} = this.props.route.params;
-    const {imgUri, name} = item;
+    const {name} = item;
     return (
       <View style={styles.container}>
         <FastImage
           style={styles.image}
           source={{
-            uri: imgUri,
+            uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png`,
           }}
         />
         <Text style={styles.text}>{name}</Text>

@@ -24,6 +24,25 @@ export type BasicPokemonInfo = {
   data: {types: PokemonTypeData[]; stats: PokemonStatData[]};
 };
 
+export type GraphQLPokemonStatData = {
+  base_stat: number;
+  pokemon_v2_stat: {
+    name: string;
+  };
+};
+export type GraphQLPokemonTypeData = {
+  pokemon_v2_type: {
+    name: string;
+  };
+};
+
+export type GraphQLPokemonInfo = {
+  name: string;
+  id: number;
+  pokemon_v2_pokemonstats: GraphQLPokemonStatData[];
+  pokemon_v2_pokemontypes: GraphQLPokemonTypeData[];
+};
+
 export type HomeStackParamList = {
   Home: HomeScreenProps;
   Pokemon: BasicPokemonInfo;
@@ -31,6 +50,16 @@ export type HomeStackParamList = {
 
 export type HomeScreenProps = {
   navigation: StackNavigationHelpers;
+};
+
+export type GraphQLHomeScreenProps = {
+  navigation: StackNavigationHelpers;
+  data: {
+    data: {
+      pokemon_v2_pokemon: GraphQLPokemonInfo[];
+    };
+    fetchMore: ({}) => {};
+  };
 };
 
 export type HomeScreenState = {
@@ -46,6 +75,16 @@ export type FavouritePokemonContextType = {
   ) => void;
   selectedPokemon: BasicPokemonInfo;
   setSelectedPokemon: (_pokemon: BasicPokemonInfo) => void;
+};
+
+export type GraphQLFavouritePokemonContextType = {
+  pokemons: GraphQLPokemonInfo[];
+  togglePokemonFavourite: (
+    _isFavourite: boolean,
+    _item: GraphQLPokemonInfo,
+  ) => void;
+  selectedPokemon: GraphQLPokemonInfo;
+  setSelectedPokemon: (_pokemon: GraphQLPokemonInfo) => void;
 };
 
 export type MapScreenState = {

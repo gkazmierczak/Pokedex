@@ -1,18 +1,21 @@
 import React from 'react';
-import {BasicPokemonInfo, FavouritePokemonContextType} from './CustomTypes';
+import {
+  GraphQLFavouritePokemonContextType,
+  GraphQLPokemonInfo,
+} from './CustomTypes';
 
 export const FavouritePokemonContext =
-  React.createContext<FavouritePokemonContextType>({
+  React.createContext<GraphQLFavouritePokemonContextType>({
     pokemons: [],
     togglePokemonFavourite: (
       _isFavourite: boolean,
-      _item: BasicPokemonInfo,
+      _item: GraphQLPokemonInfo,
     ) => {},
     selectedPokemon: {
-      data: {types: [], stats: []},
-      imgUri: '',
-      name: 'none',
-      url: '',
+      pokemon_v2_pokemonstats: [],
+      pokemon_v2_pokemontypes: [],
+      name: '',
+      id: 0,
     },
-    setSelectedPokemon: (_pokemon: BasicPokemonInfo) => {},
+    setSelectedPokemon: (_pokemon: GraphQLPokemonInfo) => {},
   });

@@ -2,19 +2,19 @@ import React from 'react';
 import {Button, Text, View, StyleSheet, FlatList} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {storage} from '../App';
-import {BasicPokemonInfo} from './CustomTypes';
+import {GraphQLPokemonInfo} from './CustomTypes';
 import {FavouritePokemonContext} from './FavouritePokemonContext';
 import PokemonIcon from './PokemonIcon';
 type FavouriteScreenState = {
-  pokemonData: BasicPokemonInfo;
+  pokemonData: GraphQLPokemonInfo;
 };
 class FavouriteScreen extends React.Component<FavouriteScreenState> {
   state: Readonly<FavouriteScreenState> = {
     pokemonData: {
-      data: {types: [], stats: []},
-      imgUri: '',
-      name: 'none',
-      url: '',
+      pokemon_v2_pokemonstats: [],
+      pokemon_v2_pokemontypes: [],
+      name: '',
+      id: 0,
     },
   };
 
@@ -44,15 +44,15 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
     }
   };
 
-  renderTypes(pokemon: BasicPokemonInfo) {
-    const {data} = pokemon;
+  renderTypes(pokemon: GraphQLPokemonInfo) {
+    const types = pokemon.pokemon_v2_pokemontypes;
     return (
       <View style={styles.types}>
         <Text style={styles.typeText}>Types:</Text>
-        {data.types.map(type => {
+        {types.map(type => {
           return (
-            <Text key={type.slot} style={styles.typeText}>
-              {type.type.name}
+            <Text key={type.pokemon_v2_type.name} style={styles.typeText}>
+              {type.pokemon_v2_type.name}
             </Text>
           );
         })}
@@ -60,14 +60,14 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
     );
   }
 
-  renderStats(pokemon: BasicPokemonInfo) {
-    const {data} = pokemon;
+  renderStats(pokemon: GraphQLPokemonInfo) {
+    const stats = pokemon.pokemon_v2_pokemonstats;
     return (
       <View>
-        {data.stats.map(stat => {
+        {stats.map(stat => {
           return (
-            <Text key={stat.stat.name} style={styles.typeText}>
-              {stat.stat.name} : {stat.base_stat}
+            <Text key={stat.pokemon_v2_stat.name} style={styles.typeText}>
+              {stat.pokemon_v2_stat.name} : {stat.base_stat}
             </Text>
           );
         })}
@@ -91,14 +91,14 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
   }
 
   renderFavouriteList(
-    pokemons: BasicPokemonInfo[],
-    onPress: (a: BasicPokemonInfo) => void,
+    pokemons: GraphQLPokemonInfo[],
+    onPress: (a: GraphQLPokemonInfo) => void,
   ) {
     return (
       <FlatList
         extraData={pokemons}
         data={pokemons}
-        renderItem={({item}: {item: BasicPokemonInfo}) => (
+        renderItem={({item}: {item: GraphQLPokemonInfo}) => (
           <PokemonIcon item={item} onPress={() => onPress(item)} />
         )}
         horizontal={true}
@@ -108,17 +108,17 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
   }
 
   renderSelectedPokemon(
-    pokemon: BasicPokemonInfo,
-    onPress: (a: boolean, b: BasicPokemonInfo) => void,
+    pokemon: GraphQLPokemonInfo,
+    onPress: (a: boolean, b: GraphQLPokemonInfo) => void,
   ) {
     if (pokemon.name !== '') {
-      const {name, imgUri} = pokemon;
+      const {name, id} = pokemon;
       return (
         <View>
           <FastImage
             style={styles.image}
             source={{
-              uri: imgUri,
+              uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
             }}
           />
           <Text style={styles.text}>{name}</Text>

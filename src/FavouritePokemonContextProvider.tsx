@@ -1,6 +1,9 @@
 import React from 'react';
 import {storage} from '../App';
-import {BasicPokemonInfo, FavouritePokemonContextType} from './CustomTypes';
+import {
+  GraphQLPokemonInfo,
+  GraphQLFavouritePokemonContextType,
+} from './CustomTypes';
 import {FavouritePokemonContext} from './FavouritePokemonContext';
 
 type Props = {
@@ -9,15 +12,15 @@ type Props = {
 
 class FavouritePokemonContextProvider extends React.Component<
   Props,
-  FavouritePokemonContextType
+  GraphQLFavouritePokemonContextType
 > {
-  state: Readonly<FavouritePokemonContextType> = {
+  state: Readonly<GraphQLFavouritePokemonContextType> = {
     pokemons: [],
     selectedPokemon: {
-      data: {types: [], stats: []},
-      imgUri: '',
+      pokemon_v2_pokemonstats: [],
+      pokemon_v2_pokemontypes: [],
       name: '',
-      url: '',
+      id: 0,
     },
     togglePokemonFavourite: this.togglePokemonFavourite,
     setSelectedPokemon: this.setSelectedPokemon,
@@ -45,7 +48,7 @@ class FavouritePokemonContextProvider extends React.Component<
     }
   };
 
-  togglePokemonFavourite(isFavourite: boolean, item: BasicPokemonInfo) {
+  togglePokemonFavourite(isFavourite: boolean, item: GraphQLPokemonInfo) {
     const {selectedPokemon} = this.state;
     let newPokemons = [];
     if (isFavourite) {
@@ -53,10 +56,10 @@ class FavouritePokemonContextProvider extends React.Component<
       if (selectedPokemon !== undefined && selectedPokemon.name === item.name) {
         this.setState({
           selectedPokemon: {
-            data: {types: [], stats: []},
-            imgUri: '',
+            pokemon_v2_pokemonstats: [],
+            pokemon_v2_pokemontypes: [],
             name: '',
-            url: '',
+            id: 0,
           },
         });
       }
@@ -67,7 +70,7 @@ class FavouritePokemonContextProvider extends React.Component<
     storage.set('favourite_pokemons', JSON.stringify(newPokemons));
   }
 
-  setSelectedPokemon(selectedPokemon: BasicPokemonInfo) {
+  setSelectedPokemon(selectedPokemon: GraphQLPokemonInfo) {
     this.setState({
       selectedPokemon: selectedPokemon,
     });

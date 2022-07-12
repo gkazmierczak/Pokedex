@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {BasicPokemonInfo} from './CustomTypes';
+import {GraphQLPokemonInfo} from './CustomTypes';
 
 type Props = {
-  item: BasicPokemonInfo;
-  onPress(item: BasicPokemonInfo): void;
+  item: GraphQLPokemonInfo;
+  onPress(item: GraphQLPokemonInfo): void;
 };
 
 class ListItem extends React.Component<Props> {
@@ -23,7 +23,12 @@ class ListItem extends React.Component<Props> {
           activeOpacity={0.6}
           onPress={() => onPress(item)}>
           <View style={styles.listItem}>
-            <FastImage style={styles.image} source={{uri: item.imgUri}} />
+            <FastImage
+              style={styles.image}
+              source={{
+                uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png`,
+              }}
+            />
             <Text style={styles.text}>{item.name}</Text>
           </View>
         </TouchableHighlight>
