@@ -83,10 +83,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
+    backgroundColor: '#2a9d8f',
   },
   image: {
+    justifyContent: 'center',
     width: 256,
     height: 256,
+    backgroundColor: '#e9c46a',
+    borderWidth: 2,
+    borderColor: '#264653',
+    borderRadius: 64,
+    padding: 0,
+    marginTop: 32,
   },
   text: {
     fontFamily: 'Kefa Regular',
@@ -101,7 +109,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Kefa Regular',
     fontWeight: 'bold',
     fontSize: 16,
-    padding: 10,
+    padding: 8,
   },
 });
 

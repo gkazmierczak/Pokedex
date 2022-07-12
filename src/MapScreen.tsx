@@ -3,6 +3,7 @@ import {StyleSheet, Modal, View, Text, TextInput, Button} from 'react-native';
 import MapView, {MapEvent, Marker} from 'react-native-maps';
 import {storage} from '../App';
 import {MapScreenState, MarkerData} from './CustomTypes';
+
 class MapScreen extends React.Component<MapScreenState> {
   state: Readonly<MapScreenState> = {
     markers: [],
@@ -20,19 +21,23 @@ class MapScreen extends React.Component<MapScreenState> {
       }
     }
   };
+
   componentDidMount() {
     this.fetchMarkers();
   }
+
   onLongPress(e: MapEvent) {
     this.setState({
       modalVisible: true,
       lastMapPressCoordinate: e.nativeEvent.coordinate,
     });
   }
+
   genMarkerKey(marker: MarkerData) {
     const {coordinate} = marker;
     return `key_${coordinate.latitude}_${coordinate.longitude}`;
   }
+
   saveMarker = () => {
     const {lastMapPressCoordinate, newMarkerDescription} = this.state;
     const marker: MarkerData = {
@@ -44,12 +49,15 @@ class MapScreen extends React.Component<MapScreenState> {
     this.hideModal();
     storage.set('pokemon_markers', JSON.stringify(markers));
   };
+
   onDescriptionChange = (text: string) => {
     this.setState({newMarkerDescription: text});
   };
+
   hideModal = () => {
     this.setState({modalVisible: false});
   };
+
   render() {
     const {modalVisible} = this.state;
     return (
@@ -71,7 +79,7 @@ class MapScreen extends React.Component<MapScreenState> {
           animationType={'slide'}>
           <View style={styles.modalView}>
             <View style={styles.modal}>
-              <Text>modal text</Text>
+              <Text style={styles.modalText}>New pokemon marker</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Description"
@@ -93,7 +101,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     width: '70%',
-    height: '70%',
+    height: '30%',
     borderRadius: 20,
     backgroundColor: '#ffffff',
     padding: 35,
@@ -113,13 +121,21 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
   },
+  modalText: {
+    fontFamily: 'Kefa Regular',
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 24,
+  },
   textInput: {
     borderColor: '#000000',
     borderWidth: 2,
     borderRadius: 20,
     width: '100%',
-    height: '10%',
+    height: '30%',
     fontSize: 16,
+    marginBottom: 16,
   },
 });
+
 export default MapScreen;

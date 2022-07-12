@@ -6,6 +6,7 @@ import {FavouritePokemonContext} from './FavouritePokemonContext';
 type Props = {
   children: React.ReactNode;
 };
+
 class FavouritePokemonContextProvider extends React.Component<
   Props,
   FavouritePokemonContextType
@@ -21,9 +22,11 @@ class FavouritePokemonContextProvider extends React.Component<
     togglePokemonFavourite: this.togglePokemonFavourite,
     setSelectedPokemon: this.setSelectedPokemon,
   };
+
   componentDidMount() {
     this.getFavouritePokemons();
   }
+
   getFavouritePokemons = async () => {
     if (storage.contains('favourite_pokemons')) {
       const jsonPokemon = storage.getString('favourite_pokemons');
@@ -32,6 +35,7 @@ class FavouritePokemonContextProvider extends React.Component<
         this.setState({pokemons: pokemonObject});
       }
     }
+
     if (storage.contains('selected_pokemon')) {
       const jsonPokemon = storage.getString('selected_pokemon');
       if (jsonPokemon !== undefined) {
@@ -40,6 +44,7 @@ class FavouritePokemonContextProvider extends React.Component<
       }
     }
   };
+
   togglePokemonFavourite(isFavourite: boolean, item: BasicPokemonInfo) {
     const {selectedPokemon} = this.state;
     let newPokemons = [];
@@ -61,11 +66,13 @@ class FavouritePokemonContextProvider extends React.Component<
     this.setState({pokemons: newPokemons});
     storage.set('favourite_pokemons', JSON.stringify(newPokemons));
   }
+
   setSelectedPokemon(selectedPokemon: BasicPokemonInfo) {
     this.setState({
       selectedPokemon: selectedPokemon,
     });
   }
+
   render() {
     return (
       <FavouritePokemonContext.Provider
@@ -80,4 +87,5 @@ class FavouritePokemonContextProvider extends React.Component<
     );
   }
 }
+
 export default FavouritePokemonContextProvider;

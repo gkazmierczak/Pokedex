@@ -17,7 +17,10 @@ class PokemonIcon extends React.Component<Props> {
     const {item, onPress} = this.props;
     return (
       <View>
-        <TouchableHighlight onPress={() => onPress(item)}>
+        <TouchableHighlight
+          style={styles.touchable}
+          underlayColor={'#e76f51'}
+          onPress={() => onPress(item)}>
           <View style={styles.icon}>
             <FastImage style={styles.image} source={{uri: item.imgUri}} />
           </View>
@@ -26,16 +29,21 @@ class PokemonIcon extends React.Component<Props> {
     );
   }
 }
+
 const styles = StyleSheet.create({
+  touchable: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: '#264653',
+    backgroundColor: '#e9c46a',
+    margin: 3,
+  },
   icon: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#00ff00',
-    borderWidth: 1,
-    width: 70,
-    height: 70,
-    borderRadius: 50,
   },
   image: {
     width: 64,
@@ -47,4 +55,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
 export default PokemonIcon;

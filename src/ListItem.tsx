@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  TouchableHighlight,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {BasicPokemonInfo} from './CustomTypes';
 
@@ -22,8 +16,12 @@ class ListItem extends React.Component<Props> {
   render() {
     const {item, onPress} = this.props;
     return (
-      <View>
-        <TouchableHighlight onPress={() => onPress(item)}>
+      <View style={styles.bg}>
+        <TouchableHighlight
+          underlayColor={'#e76f51'}
+          style={styles.touchable}
+          activeOpacity={0.6}
+          onPress={() => onPress(item)}>
           <View style={styles.listItem}>
             <FastImage style={styles.image} source={{uri: item.imgUri}} />
             <Text style={styles.text}>{item.name}</Text>
@@ -33,17 +31,23 @@ class ListItem extends React.Component<Props> {
     );
   }
 }
+
 const styles = StyleSheet.create({
+  touchable: {
+    width: 300,
+    borderRadius: 25,
+    marginTop: 5,
+  },
   listItem: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
-    borderColor: '#000000',
-    borderWidth: 1,
-    width: Dimensions.get('window').width,
-    height: 100,
+    borderColor: '#264653',
+    borderWidth: 2,
+    width: 300,
+    borderRadius: 25,
+    backgroundColor: '#e9c46a',
   },
   image: {
     width: 100,
@@ -54,5 +58,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  bg: {
+    backgroundColor: '#2a9d8f',
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
 });
+
 export default ListItem;

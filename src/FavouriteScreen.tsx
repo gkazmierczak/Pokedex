@@ -17,9 +17,11 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       url: '',
     },
   };
+
   componentDidMount() {
     this.loadFavouritePokemon();
   }
+
   unfavouritePokemon = () => {
     storage.delete('favourite_pokemon');
     this.setState({
@@ -41,6 +43,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       }
     }
   };
+
   renderTypes(pokemon: BasicPokemonInfo) {
     const {data} = pokemon;
     return (
@@ -56,6 +59,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       </View>
     );
   }
+
   renderStats(pokemon: BasicPokemonInfo) {
     const {data} = pokemon;
     return (
@@ -70,6 +74,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       </View>
     );
   }
+
   renderNoFavourite() {
     return (
       <View style={styles.container}>
@@ -84,6 +89,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       </View>
     );
   }
+
   renderFavouriteList(
     pokemons: BasicPokemonInfo[],
     onPress: (a: BasicPokemonInfo) => void,
@@ -100,6 +106,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       />
     );
   }
+
   renderSelectedPokemon(
     pokemon: BasicPokemonInfo,
     onPress: (a: boolean, b: BasicPokemonInfo) => void,
@@ -107,7 +114,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
     if (pokemon.name !== '') {
       const {name, imgUri} = pokemon;
       return (
-        <View style={styles.container}>
+        <View>
           <FastImage
             style={styles.image}
             source={{
@@ -117,7 +124,11 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
           <Text style={styles.text}>{name}</Text>
           {this.renderTypes(pokemon)}
           {this.renderStats(pokemon)}
-          <Button title="Unfavourite" onPress={() => onPress(true, pokemon)} />
+          <Button
+            title="Unfavourite"
+            color={'#e9c46a'}
+            onPress={() => onPress(true, pokemon)}
+          />
         </View>
       );
     }
@@ -134,7 +145,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
         }) => {
           if (pokemons.length > 0) {
             return (
-              <View>
+              <View style={styles.container}>
                 {this.renderFavouriteList(pokemons, setSelectedPokemon)}
                 {this.renderSelectedPokemon(
                   selectedPokemon,
@@ -153,11 +164,24 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
+    backgroundColor: '#2a9d8f',
     alignItems: 'center',
+    flex: 1,
+  },
+  button: {
+    borderRadius: 25,
+    backgroundColor: '#e9c46a',
   },
   image: {
+    justifyContent: 'center',
     width: 256,
     height: 256,
+    backgroundColor: '#e9c46a',
+    marginTop: 5,
+    borderWidth: 2,
+    borderColor: '#264653',
+    borderRadius: 64,
+    padding: 0,
   },
   text: {
     fontFamily: 'Kefa Regular',
@@ -177,7 +201,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Kefa Regular',
     fontWeight: 'bold',
     fontSize: 16,
-    padding: 10,
+    padding: 8,
   },
 });
 

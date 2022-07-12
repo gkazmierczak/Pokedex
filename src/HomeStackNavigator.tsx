@@ -5,6 +5,7 @@ import HomeScreen from './HomeScreen';
 import {HomeStackParamList} from './CustomTypes';
 
 const Stack = createStackNavigator<HomeStackParamList>();
+
 class HomeStackNavigator extends React.Component {
   render() {
     return (

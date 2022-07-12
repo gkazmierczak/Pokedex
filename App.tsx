@@ -15,7 +15,11 @@ const App = () => {
     <FavouritePokemonContextProvider>
       <NavigationContainer>
         <Tab.Navigator initialRouteName="Home">
-          <Tab.Screen name="HomeStack" component={HomeStackNavigator} />
+          <Tab.Screen
+            name="Pokedex"
+            component={HomeStackNavigator}
+            options={{headerShown: false}}
+          />
           <Tab.Screen
             name="Favourite"
             component={FavouriteScreen}

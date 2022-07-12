@@ -12,6 +12,7 @@ class HomeScreen extends React.Component<HomeScreenProps, HomeScreenState> {
     pokemons: [],
     offset: 0,
   };
+
   constructor(props: HomeScreenProps) {
     super(props);
     this.getMorePokemons();
@@ -26,6 +27,7 @@ class HomeScreen extends React.Component<HomeScreenProps, HomeScreenState> {
     this.setState({pokemons, offset: pokemons.length});
     this.state.pokemons.map(this.getPokemonData);
   };
+
   getPokemonData = async (pokemon: BasicPokemonInfo) => {
     const response = await fetch(pokemon.url);
     const data = await response.json();
@@ -40,7 +42,7 @@ class HomeScreen extends React.Component<HomeScreenProps, HomeScreenState> {
   };
 
   handlePokemonPress = (item: BasicPokemonInfo) => {
-    this.props.navigation.navigate('Pokemon', {item});
+    this.props.navigation.push('Pokemon', {item});
   };
 
   render() {
