@@ -1,3 +1,4 @@
+import AnimatedLottieView from 'lottie-react-native';
 import React from 'react';
 import {Button, Text, View, StyleSheet, FlatList} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -8,6 +9,28 @@ import PokemonIcon from './PokemonIcon';
 type FavouriteScreenState = {
   pokemonData: GraphQLPokemonInfo;
 };
+
+const typeColors = {
+  normal: '#A8A77A',
+  fire: '#EE8130',
+  water: '#6390F0',
+  electric: '#F7D02C',
+  grass: '#7AC74C',
+  ice: '#96D9D6',
+  fighting: '#C22E28',
+  poison: '#A33EA1',
+  ground: '#E2BF65',
+  flying: '#A98FF3',
+  psychic: '#F95587',
+  bug: '#A6B91A',
+  rock: '#B6A136',
+  ghost: '#735797',
+  dragon: '#6F35FC',
+  dark: '#705746',
+  steel: '#B7B7CE',
+  fairy: '#D685AD',
+};
+
 class FavouriteScreen extends React.Component<FavouriteScreenState> {
   state: Readonly<FavouriteScreenState> = {
     pokemonData: {
@@ -43,17 +66,27 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
       }
     }
   };
+  getTypeStyle(type: string) {
+    return {
+      margin: 5,
+      backgroundColor: typeColors[type],
+      borderRadius: 10,
+    };
+  }
 
   renderTypes(pokemon: GraphQLPokemonInfo) {
     const types = pokemon.pokemon_v2_pokemontypes;
     return (
       <View style={styles.types}>
-        <Text style={styles.typeText}>Types:</Text>
         {types.map(type => {
           return (
-            <Text key={type.pokemon_v2_type.name} style={styles.typeText}>
-              {type.pokemon_v2_type.name}
-            </Text>
+            <View
+              key={type.pokemon_v2_type.name}
+              style={this.getTypeStyle(type.pokemon_v2_type.name)}>
+              <Text key={type.pokemon_v2_type.name} style={styles.typeText}>
+                {type.pokemon_v2_type.name}
+              </Text>
+            </View>
           );
         })}
       </View>
@@ -78,11 +111,16 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
   renderNoFavourite() {
     return (
       <View style={styles.container}>
-        <FastImage
+        {/* <FastImage
           style={styles.image}
           source={{
             uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Pokebola-pokeball-png-0.png/240px-Pokebola-pokeball-png-0.png',
           }}
+        /> */}
+        <AnimatedLottieView
+          source={require('../assets/pokeball.json')}
+          autoPlay
+          loop
         />
         <Text style={styles.headlineText}>No favourite pokemon selected.</Text>
         <Text style={styles.typeText}>Selected pokemon will appear here.</Text>
@@ -114,7 +152,7 @@ class FavouriteScreen extends React.Component<FavouriteScreenState> {
     if (pokemon.name !== '') {
       const {name, id} = pokemon;
       return (
-        <View>
+        <View style={styles.selectedPokemon}>
           <FastImage
             style={styles.image}
             source={{
@@ -182,6 +220,9 @@ const styles = StyleSheet.create({
     borderColor: '#264653',
     borderRadius: 64,
     padding: 0,
+  },
+  selectedPokemon: {
+    alignItems: 'center',
   },
   text: {
     fontFamily: 'Kefa Regular',

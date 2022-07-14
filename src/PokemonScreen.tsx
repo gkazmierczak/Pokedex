@@ -9,26 +9,58 @@ type Props = {
   route: RouteProp<{params: {item: GraphQLPokemonInfo}}>;
 };
 
+const typeColors = {
+  normal: '#A8A77A',
+  fire: '#EE8130',
+  water: '#6390F0',
+  electric: '#F7D02C',
+  grass: '#7AC74C',
+  ice: '#96D9D6',
+  fighting: '#C22E28',
+  poison: '#A33EA1',
+  ground: '#E2BF65',
+  flying: '#A98FF3',
+  psychic: '#F95587',
+  bug: '#A6B91A',
+  rock: '#B6A136',
+  ghost: '#735797',
+  dragon: '#6F35FC',
+  dark: '#705746',
+  steel: '#B7B7CE',
+  fairy: '#D685AD',
+};
 class PokemonScreen extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
+  }
+
+  getTypeStyle(type: string) {
+    return {
+      margin: 5,
+      backgroundColor: typeColors[type],
+      borderRadius: 10,
+    };
   }
 
   renderTypes() {
     const types = this.props.route.params.item.pokemon_v2_pokemontypes;
     return (
       <View style={styles.types}>
-        <Text style={styles.typeText}>Types:</Text>
         {types.map(type => {
           return (
-            <Text key={type.pokemon_v2_type.name} style={styles.typeText}>
-              {type.pokemon_v2_type.name}
-            </Text>
+            <View
+              key={type.pokemon_v2_type.name}
+              style={this.getTypeStyle(type.pokemon_v2_type.name)}>
+              <Text key={type.pokemon_v2_type.name} style={styles.typeText}>
+                {type.pokemon_v2_type.name}
+              </Text>
+            </View>
           );
         })}
       </View>
     );
   }
+
   renderStats() {
     const stats = this.props.route.params.item.pokemon_v2_pokemonstats;
     return (

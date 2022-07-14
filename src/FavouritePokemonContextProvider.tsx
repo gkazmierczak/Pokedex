@@ -74,6 +74,7 @@ class FavouritePokemonContextProvider extends React.Component<
     this.setState({
       selectedPokemon: selectedPokemon,
     });
+    storage.set('selected_pokemon', JSON.stringify(selectedPokemon));
   }
 
   render() {

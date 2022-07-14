@@ -24,7 +24,6 @@ export const pokemonQuery = gql`
 export const withQuery = (Component: any) => {
   return (props: JSX.IntrinsicAttributes) => {
     const data = useQuery(pokemonQuery);
-    console.log('query update');
     return <Component {...props} data={data} />;
   };
 };
